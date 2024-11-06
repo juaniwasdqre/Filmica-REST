@@ -11,15 +11,51 @@ class FilmModel {
 
     //1. LISTAR
 
-    function getFilms(){
-         // 2. Ejecuto la consulta
-         $query = $this->db->prepare('SELECT * FROM peliculas');
-         $query->execute();
-     
-         // 3. Obtengo los datos en un arreglo de objetos
-         $films = $query->fetchAll(PDO::FETCH_OBJ); 
-     
-         return $films;
+    function getFilms($orderBy = false, $direction = 'ASC'){
+        $sql = 'SELECT * FROM peliculas';
+
+        if ($orderBy) {
+            switch ($orderBy) {
+                case 'id':
+                    $sql .= ' ORDER BY id';
+                    break;
+                case 'titulo':
+                    $sql .= ' ORDER BY titulo';
+                    break;
+                case 'year':
+                    $sql .= ' ORDER BY year';
+                    break;
+                case 'genero':
+                    $sql .= ' ORDER BY genero';
+                    break;
+                case 'id_director':
+                    $sql .= ' ORDER BY id_director';
+                    break;
+                case 'sinopsis':
+                    $sql .= ' ORDER BY sinopsis';
+                    break;
+            }
+        }
+
+        if ($direction) {
+            switch ($direction) {
+                case 'DESC':
+                    $sql .= ' DESC';
+                    break;
+                case 'ASC':
+                    $sql .= ' ASC';
+                    break;
+            }
+        }
+
+        // 2. Ejecuto la consulta
+        $query = $this->db->prepare($sql);
+        $query->execute();
+
+        // 3. Obtengo los datos en un arreglo de objetos
+        $tasks = $query->fetchAll(PDO::FETCH_OBJ);
+
+        return $tasks;
     }
 
     public function getFilm($id) {    

@@ -7,5 +7,6 @@
     #                  endpoint     verbo      controller        metodo
     $router->addRoute('peliculas'     , 'GET', 'FilmApiController', 'getAll');
     $router->addRoute('pelicula/:id'  , 'GET', 'FilmApiController', 'get');
+    $router->addRoute('peliculas/:id'  , 'DELETE', 'FilmApiController', 'delete');
 
     $router->route($_GET['resource'], $_SERVER['REQUEST_METHOD']);

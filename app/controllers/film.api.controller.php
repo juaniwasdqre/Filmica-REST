@@ -24,14 +24,21 @@ class FilmApiController {
     // /api/peliculas
     public function getAll($req, $res) {
 
-        # /api/peliculas?genero=(valor)
-        if(isset($req->query->genero)) {
-            $films = $this->model->getFilmsByGenre($req->query->genero);
-        } else {
-            $films = $this->model->getFilms();
+        $orderBy = null;
+        if(isset($req->query->orderBy))
+            $orderBy = $req->query->orderBy;
+
+        $direction = null;
+        if(isset($req->query->direction)){
+            $direction  = $req->query->direction;
         }
 
-        $this->view->response($films);
+        $films = $this->model->getFilms($orderBy, $direction);
+
+        if(!$films){ 
+            return $this->view->response('No existen peliculas', 404);
+        }
+        return $this->view->response($films , 200);
     }
 
     # /api/pelicula/:id
@@ -53,4 +60,21 @@ class FilmApiController {
     //2. AGREGAR
     //3. MODIFICAR
     //4. ELIMINAR
+
+    public function delete($req, $res) {
+        //obtengo el id de la pelicula desde la ruta
+        $id = $req->params->id;
+
+        //obtengo la pelicula de la DB
+        $film = $this->model->getFilm($id);
+
+        if(!$film){
+            return $this->view->response('La película no existe', 404);
+        }
+
+        $this->model->eraseFilm($id);
+
+        //mando la pelicula a la vista
+        return $this->view->response('La película se eliminó con éxito');
+    }
 }
