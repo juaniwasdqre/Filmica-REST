@@ -22,6 +22,15 @@ class FilmModel {
          return $films;
     }
 
+    public function getFilm($id) {    
+        $query = $this->db->prepare('SELECT * FROM peliculas WHERE id = ?');
+        $query->execute([$id]);   
+    
+        $film = $query->fetch(PDO::FETCH_OBJ);
+    
+        return $film;
+    }
+
     function getFilmsWithDirectorName(){
 
         $query = $this->db->prepare('SELECT peliculas.*, director.nombre FROM peliculas INNER JOIN director ON peliculas.id_director = director.id ORDER BY `peliculas`.`titulo` ASC');
@@ -40,15 +49,6 @@ class FilmModel {
         $films = $query->fetchAll(PDO::FETCH_OBJ); 
     
         return $films;
-    }
-
-    public function getFilm($id) {    
-        $query = $this->db->prepare('SELECT * FROM peliculas WHERE id = ?');
-        $query->execute([$id]);   
-    
-        $film = $query->fetchAll(PDO::FETCH_OBJ);
-    
-        return $film;
     }
 
     public function getTop5(){
@@ -81,6 +81,7 @@ class FilmModel {
         return $id;
     }
 
+
     //3. MODIFICAR
 
     function modifyFilm($id, $title, $id_director, $genre, $year, $synopsis) {        
@@ -90,12 +91,11 @@ class FilmModel {
         return $id;
     }
 
+    
     //4. ELIMINAR
 
     function eraseFilm($film){
         $query = $this->db->prepare('DELETE FROM peliculas WHERE id = ?');
         $query->execute([$film]);
-    }
-
-    
+    }   
 }
