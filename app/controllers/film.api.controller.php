@@ -23,9 +23,12 @@ class FilmApiController {
 
     // /api/peliculas
     public function getAll($req, $res) {
-        $films = $this->model->getFilms();
 
-        //TODO: filtrar por genero
+        if(isset($req->query->genero)) {
+            $films = $this->model->getFilmsByGenre($req->query->genero);
+        } else {
+            $films = $this->model->getFilms();
+        }
 
         $this->view->response($films);
     }
