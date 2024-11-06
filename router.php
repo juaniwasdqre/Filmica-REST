@@ -4,7 +4,6 @@
 
     $router = new Router();
 
-
     #                  endpoint          verbo     controller        metodo
     $router->addRoute('peliculas'      , 'GET', 'filmApiController', 'getAll');
     $router->addRoute('peliculas/:id'  , 'GET', 'filmApiController', 'get');
