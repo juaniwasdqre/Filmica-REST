@@ -24,6 +24,7 @@ class FilmApiController {
     // /api/peliculas
     public function getAll($req, $res) {
 
+        # /api/peliculas?genero=(valor)
         if(isset($req->query->genero)) {
             $films = $this->model->getFilmsByGenre($req->query->genero);
         } else {
@@ -33,7 +34,7 @@ class FilmApiController {
         $this->view->response($films);
     }
 
-    // /api/pelicula/:id
+    # /api/pelicula/:id
     public function get($req, $res) {
         #id de la pelicula desde la ruta
         $id = $req->params->id;
