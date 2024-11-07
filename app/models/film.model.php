@@ -117,9 +117,9 @@ class FilmModel {
 
     //2. AGREGAR
  
-    function insertFilm($title, $id_director, $genero, $year, $sinopsis) { 
+    function insertFilm($titulo, $id_director, $genero, $year, $sinopsis) { 
         $query = $this->db->prepare('INSERT INTO peliculas(titulo, id_director, genero, year, sinopsis) VALUES (?, ?, ?, ?, ?)');
-        $query->execute([$title, $id_director, $genero, $year, $sinopsis]);
+        $query->execute([$titulo, $id_director, $genero, $year, $sinopsis]);
     
         $id = $this->db->lastInsertId();
 

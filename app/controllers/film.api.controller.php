@@ -58,6 +58,28 @@ class FilmApiController {
     }
 
     //2. AGREGAR
+
+    public function create($req, $res) {
+
+        if (empty($req->body->titulo) || empty($req->body->id_director) || empty($req->body->genero) || empty($req->body->year || empty($req->body->sinopsis))) {
+            return $this->view->response('Faltan completar datos', 400);
+        }
+
+        $titulo = $req->body->titulo; 
+        $id_director = $req->body->id_director; 
+        $genero = $req->body->genero; 
+        $year = $req->body->year; 
+        $sinopsis = $req->body->sinopsis; 
+
+        $id = $this->model->insertFilm($titulo, $id_director, $genero, $year, $sinopsis);
+
+        if (!$id) {
+            return $this->view->response("Error al insertar tarea", 500);
+        }
+
+        $film = $this->model->getFilm($id);
+        return $this->view->response($film, 201);
+    }
     //3. MODIFICAR
     //4. ELIMINAR
 

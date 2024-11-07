@@ -8,5 +8,6 @@
     $router->addRoute('peliculas'     , 'GET', 'FilmApiController', 'getAll');
     $router->addRoute('pelicula/:id'  , 'GET', 'FilmApiController', 'get');
     $router->addRoute('peliculas/:id'  , 'DELETE', 'FilmApiController', 'delete');
+    $router->addRoute('peliculas'  , 'POST', 'FilmApiController', 'create');
 
     $router->route($_GET['resource'], $_SERVER['REQUEST_METHOD']);
