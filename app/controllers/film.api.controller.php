@@ -18,11 +18,13 @@ class FilmApiController {
         $this->directorModel = new DirectorModel();
     }
 
-
     //1. LISTAR
-
-    // /api/peliculas
     public function getAll($req, $res) {
+
+        $genero = null;
+        if(isset($req->query->genero)) {
+            $genero = $req->query->genero;
+        } 
 
         $orderBy = null;
         if(isset($req->query->orderBy))
@@ -32,35 +34,30 @@ class FilmApiController {
         if(isset($req->query->direction)){
             $direction  = $req->query->direction;
         }
-
-        $films = $this->model->getFilms($orderBy, $direction);
-
+        
+        $films = $this->model->getFilms($genero, $orderBy, $direction);
+        
         if(!$films){ 
             return $this->view->response('No existen peliculas', 404);
         }
+        
         return $this->view->response($films , 200);
     }
 
-    # /api/pelicula/:id
     public function get($req, $res) {
-        #id de la pelicula desde la ruta
         $id = $req->params->id;
 
-        #pelicula desde la DB
         $film = $this->model->getFilm($id);
 
         if(!$film) {
             return $this->view->response("La pelicula con el id=$id no existe", 404);
         }
 
-        #mando la pelicula a la vista
         return $this->view->response($film);
     }
 
     //2. AGREGAR
-
     public function create($req, $res) {
-
         if (empty($req->body->titulo) || empty($req->body->id_director) || empty($req->body->genero) || empty($req->body->year || empty($req->body->sinopsis))) {
             return $this->view->response('Faltan completar datos', 400);
         }
@@ -80,14 +77,37 @@ class FilmApiController {
         $film = $this->model->getFilm($id);
         return $this->view->response($film, 201);
     }
-    //3. MODIFICAR
-    //4. ELIMINAR
 
-    public function delete($req, $res) {
-        //obtengo el id de la pelicula desde la ruta
+    //3. MODIFICAR
+    public function update($req, $res) {
         $id = $req->params->id;
 
-        //obtengo la pelicula de la DB
+        $film = $this->model->getFilm($id);
+
+        if(!$film){
+            return $this->view->response('La película no existe', 404);
+        }
+
+        if (empty($req->body->titulo) || empty($req->body->id_director) || empty($req->body->genero) || empty($req->body->year || empty($req->body->sinopsis))) {
+            return $this->view->response('Faltan completar datos', 400);
+        }
+
+        $titulo = $req->body->titulo; 
+        $id_director = $req->body->id_director; 
+        $genero = $req->body->genero; 
+        $year = $req->body->year; 
+        $sinopsis = $req->body->sinopsis; 
+
+        $this->model->modifyFilm($id,$titulo,$id_director,$genero,$year,$sinopsis);
+
+        $film = $this->model->getFilm($id);
+        return $this->view->response($film, 200);
+    }
+
+    //4. ELIMINAR
+    public function delete($req, $res) {
+        $id = $req->params->id;
+
         $film = $this->model->getFilm($id);
 
         if(!$film){
@@ -96,7 +116,6 @@ class FilmApiController {
 
         $this->model->eraseFilm($id);
 
-        //mando la pelicula a la vista
         return $this->view->response('La película se eliminó con éxito');
     }
 }

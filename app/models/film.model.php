@@ -10,9 +10,36 @@ class FilmModel {
 
 
     //1. LISTAR
-
-    function getFilms($orderBy = false, $direction = 'ASC'){
+    function getFilms($genero, $orderBy, $direction){
         $sql = 'SELECT * FROM peliculas';
+
+        if ($genero) {
+            switch ($genero) {
+                case 'Drama':
+                    $sql .= ' WHERE genero = "Drama"';
+                    break;
+                case 'Terror':
+                    $sql .= ' WHERE genero = "Terror"';
+                    break;
+                case 'Comedia':
+                    $sql .= ' WHERE genero = "Comedia"';
+                    break;
+                case 'Romance':
+                    $sql .= ' WHERE genero = "Romance"';
+                    break;
+                case 'Accion':
+                    $sql .= ' WHERE genero = "Accion"';
+                    break;
+                case 'Aventura':
+                    $sql .= ' WHERE genero = "Aventura"';
+                    break;
+                case 'Documental':
+                    $sql .= ' WHERE genero = "Documental"';
+                    break;
+                case 'Fantasia':
+                    $sql .= ' WHERE genero = "Fantasia"';
+                    break;
+                }
 
         if ($orderBy) {
             switch ($orderBy) {
@@ -48,15 +75,14 @@ class FilmModel {
             }
         }
 
-        // 2. Ejecuto la consulta
         $query = $this->db->prepare($sql);
         $query->execute();
 
-        // 3. Obtengo los datos en un arreglo de objetos
-        $tasks = $query->fetchAll(PDO::FETCH_OBJ);
+        $films = $query->fetchAll(PDO::FETCH_OBJ);
 
-        return $tasks;
+        return $films;
     }
+}
 
     public function getFilm($id) {    
         $query = $this->db->prepare('SELECT * FROM peliculas WHERE id = ?');
@@ -65,15 +91,6 @@ class FilmModel {
         $film = $query->fetch(PDO::FETCH_OBJ);
     
         return $film;
-    }
-
-    public function getFilmsByGenre($genre) {
-        $query = $this->db->prepare('SELECT * FROM peliculas WHERE genero = ?');
-        $query->execute([$genre]);
-
-        $films = $query->fetchAll(PDO::FETCH_OBJ);
-
-        return $films;
     }
 
     function getFilmsWithDirectorName(){
@@ -86,11 +103,9 @@ class FilmModel {
     }
 
     function getFilmByDirector($id_director){
-        // 2. Ejecuto la consulta
         $query = $this->db->prepare('SELECT * FROM peliculas WHERE id_director = ?');
         $query->execute([$id_director]);
-    
-        // 3. Obtengo los datos en un arreglo de objetos
+
         $films = $query->fetchAll(PDO::FETCH_OBJ); 
     
         return $films;
@@ -108,7 +123,6 @@ class FilmModel {
         $query = $this->db->prepare('SELECT id_director FROM peliculas WHERE id = ?');
         $query->execute([$id]);
      
-         // 3. Obtengo los datos en un arreglo de objetos
          $id_director = $query->fetchAll(PDO::FETCH_OBJ); 
      
          return $id_director;
