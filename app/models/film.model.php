@@ -15,31 +15,33 @@ class FilmModel {
 
         if ($genero) {
             switch ($genero) {
-                case 'Drama':
+                case stristr($genero, 'Drama'):
                     $sql .= ' WHERE genero = "Drama"';
                     break;
-                case 'Terror':
+                case stristr($genero, 'Terror'):
                     $sql .= ' WHERE genero = "Terror"';
                     break;
-                case 'Comedia':
+                case stristr($genero, 'Comedia'):
                     $sql .= ' WHERE genero = "Comedia"';
                     break;
-                case 'Romance':
+                case stristr($genero, 'Romance'):
                     $sql .= ' WHERE genero = "Romance"';
                     break;
-                case 'Accion':
+                case stristr($genero, 'Accion'):
                     $sql .= ' WHERE genero = "Accion"';
                     break;
-                case 'Aventura':
+                case stristr($genero, 'Aventura'):
                     $sql .= ' WHERE genero = "Aventura"';
                     break;
-                case 'Documental':
+                case stristr($genero, 'Documental'):
                     $sql .= ' WHERE genero = "Documental"';
                     break;
-                case 'Fantasia':
+                case stristr($genero, 'Fantasia'):
                     $sql .= ' WHERE genero = "Fantasia"';
                     break;
-                }
+            }
+        }
+            
 
         if ($orderBy) {
             switch ($orderBy) {
@@ -82,9 +84,8 @@ class FilmModel {
 
         return $films;
     }
-}
 
-    function getFilm($id) {    
+    function getFilm($id) {
         $query = $this->db->prepare('SELECT * FROM peliculas WHERE id = ?');
         $query->execute([$id]);   
     
