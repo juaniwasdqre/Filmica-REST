@@ -21,10 +21,6 @@ class FilmApiController {
 
     //1. LISTAR
     public function getAll($req, $res) {
-        /*$user = $this->authHelper->currentUser();
-        if(!$user){
-            return $this->view->response('No esta autorizado', 401);
-        }*/
 
         $genero = null;
         if(isset($req->query->genero)) {
@@ -63,6 +59,15 @@ class FilmApiController {
 
     //2. AGREGAR
     public function create($req, $res) {
+        $user = $this->authHelper->currentUser();
+        if(!$user){
+            return $this->view->response('No esta autorizado', 401);
+        }
+
+        if($user->username!='webadmin'){
+            return $this->view->response('No es un administrador', 403);
+        }
+
         if (empty($req->body->titulo) || empty($req->body->id_director) || empty($req->body->genero) || empty($req->body->year || empty($req->body->sinopsis))) {
             return $this->view->response('Faltan completar datos', 400);
         }
@@ -85,6 +90,15 @@ class FilmApiController {
 
     //3. MODIFICAR
     public function update($req, $res) {
+        $user = $this->authHelper->currentUser();
+        if(!$user){
+            return $this->view->response('No esta autorizado', 401);
+        }
+
+        if($user->username!='webadmin'){
+            return $this->view->response('No es un administrador', 403);
+        }
+        
         $id = $req->params->id;
 
         $film = $this->model->getFilm($id);
