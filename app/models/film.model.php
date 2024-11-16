@@ -10,7 +10,7 @@ class FilmModel {
 
 
     //1. LISTAR
-    function getFilms($genero, $orderBy, $direction){
+    function getFilms($genero=null, $orderBy=null, $direction=null){
         $sql = 'SELECT * FROM peliculas';
 
         if ($genero) {
@@ -84,7 +84,7 @@ class FilmModel {
     }
 }
 
-    public function getFilm($id) {    
+    function getFilm($id) {    
         $query = $this->db->prepare('SELECT * FROM peliculas WHERE id = ?');
         $query->execute([$id]);   
     

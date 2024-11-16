@@ -8,18 +8,23 @@ class FilmApiController {
 
     private $view;
     private $model;
-
+    private $authHelper;
     private $directorModel;
 
     public function __construct() {
         $this->model = new FilmModel();
         $this->view = new JSONView();
+        $this->authHelper = new AuthApiHelper;
 
         $this->directorModel = new DirectorModel();
     }
 
     //1. LISTAR
     public function getAll($req, $res) {
+        /*$user = $this->authHelper->currentUser();
+        if(!$user){
+            return $this->view->response('No esta autorizado', 401);
+        }*/
 
         $genero = null;
         if(isset($req->query->genero)) {
