@@ -45,6 +45,49 @@ class FilmApiController {
         return $this->view->response($films , 200);
     }
 
+    public function getPaginado($req, $res) {
+
+        $genero = null;
+        if(isset($req->query->genero)) {
+            $genero = $req->query->genero;
+        } 
+
+        $orderBy = null;
+        if(isset($req->query->orderBy))
+            $orderBy = $req->query->orderBy;
+
+        $direction = null;
+        if(isset($req->query->direction)){
+            $direction  = $req->query->direction;
+        }
+
+        // SE AGREGA CODIGO PARA PAGINAR CORRECTAMENTE:
+
+        //limite de informacion/datos por pagina
+        $limit = 5;
+
+        // se calcula cuanto va a ser el maximo de paginas a partir del limite pre-definido
+        $pagMax = ceil( ($this->model->countRows())/$limit );
+
+        // queremos que por defecto $pag=1 para que funcione => api/peliculas sin especificar un nro de pagina
+        $pag = 1;
+        if(isset($req->params->p)) {
+            $pag = $req->params->p;
+        }
+
+        if(!is_numeric($pag) || ($pag>$pagMax)){ 
+            return $this->view->response('El valor ingresado es erróneo.', 400);
+        }
+
+        $films = $this->model->getFilmsPaginado($genero, $orderBy, $direction, $pag, $limit);
+        
+        if(!$films){ 
+            return $this->view->response('No existen peliculas', 404);
+        }
+        
+        return $this->view->response($films , 200);
+    }
+
     public function get($req, $res) {
         $id = $req->params->id;
 
@@ -125,6 +168,15 @@ class FilmApiController {
 
     //4. ELIMINAR
     public function delete($req, $res) {
+        $user = $this->authHelper->currentUser();
+        if(!$user){
+            return $this->view->response('No esta autorizado', 401);
+        }
+
+        if($user->username!='webadmin'){
+            return $this->view->response('No es un administrador', 403);
+        }
+        
         $id = $req->params->id;
 
         $film = $this->model->getFilm($id);
